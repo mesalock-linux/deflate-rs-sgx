@@ -1,3 +1,4 @@
+use std::prelude::v1::*;
 use crate::bitstream::LsbWriter;
 use crate::deflate_state::LengthBuffers;
 use crate::huffman_table::{

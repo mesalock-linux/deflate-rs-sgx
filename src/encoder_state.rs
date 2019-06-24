@@ -1,3 +1,4 @@
+use std::prelude::v1::*;
 use crate::bitstream::LsbWriter;
 use crate::huffman_table::HuffmanTable;
 use crate::lzvalue::LZType;

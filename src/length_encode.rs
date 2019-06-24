@@ -1,3 +1,4 @@
+use std::prelude::v1::*;
 use std::clone::Clone;
 use std::iter::Iterator;
 
@@ -177,6 +178,7 @@ pub fn huffman_lengths_from_frequency_m(
 }
 
 mod in_place {
+    use std::prelude::v1::*;
     type WeightType = u32;
 
     pub fn validate_lengths(lengths: &[u8]) -> bool {

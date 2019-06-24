@@ -1,3 +1,5 @@
+use std::prelude::v1::*;
+
 pub const WINDOW_SIZE: usize = 32768;
 pub const WINDOW_MASK: usize = WINDOW_SIZE - 1;
 #[cfg(test)]

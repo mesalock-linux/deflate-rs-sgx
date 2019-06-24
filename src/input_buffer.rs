@@ -1,3 +1,4 @@
+use std::prelude::v1::*;
 use std::cmp;
 
 use crate::chained_hash_table::WINDOW_SIZE;

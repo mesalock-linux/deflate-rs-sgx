@@ -4,6 +4,7 @@
 
 //! This module provides a bit writer
 use std::io::{self, Write};
+use std::prelude::v1::*;
 
 #[cfg(target_pointer_width = "64")]
 #[macro_use]

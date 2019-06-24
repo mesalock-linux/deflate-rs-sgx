@@ -291,6 +291,7 @@ impl<W: Write> Drop for ZlibEncoder<W> {
 
 #[cfg(feature = "gzip")]
 pub mod gzip {
+    use std::prelude::v1::*;
 
     use std::io::{Cursor, Write};
     use std::{io, thread};

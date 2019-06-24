@@ -1,3 +1,4 @@
+use std::prelude::v1::*;
 use std::u16;
 
 use crate::huffman_table::{

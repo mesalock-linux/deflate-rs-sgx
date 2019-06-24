@@ -1,5 +1,6 @@
 use crate::bit_reverse::reverse_bits;
 use crate::lzvalue::StoredLength;
+use std::prelude::v1::*;
 use std::fmt;
 
 // The number of length codes in the huffman table

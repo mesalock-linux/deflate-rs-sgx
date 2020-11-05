@@ -86,6 +86,12 @@ pub struct DeflateState<W: Write> {
     /// writer.
     pub output_buf_pos: usize,
     pub flush_mode: Flush,
+    /// Whether we need to flush everything before continuing.
+    /// Currently only used after having output a sync flush.
+    /// This is implemented in a somewhat clunky manner at the moment,
+    /// ideally it should be done in a more fail-safe way to avoid
+    /// further bugs.
+    pub needs_flush: bool,
     /// Number of bytes written as calculated by sum of block input lengths.
     /// Used to check that they are correct when `debug_assertions` are enabled.
     pub bytes_written_control: DebugCounter,
@@ -108,6 +114,7 @@ impl<W: Write> DeflateState<W> {
             inner: Some(writer),
             output_buf_pos: 0,
             flush_mode: Flush::None,
+            needs_flush: false,
             bytes_written_control: DebugCounter::default(),
         }
     }
@@ -137,6 +144,7 @@ impl<W: Write> DeflateState<W> {
         self.bytes_written = 0;
         self.output_buf_pos = 0;
         self.flush_mode = Flush::None;
+        self.needs_flush = false;
         if cfg!(debug_assertions) {
             self.bytes_written_control.reset();
         }

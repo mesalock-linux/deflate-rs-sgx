@@ -86,7 +86,9 @@ pub fn compress_data_dynamic_n<W: Write>(
 
     let mut slice = input;
 
-    loop {
+    // enter the decompression loop unless we did a sync flush, in case we want to make sure
+    // everything is output before continuing.
+    while deflate_state.needs_flush != true {
         let output_buf_len = deflate_state.output_buf().len();
         let output_buf_pos = deflate_state.output_buf_pos;
         // If the output buffer has too much data in it already, flush it before doing anything
@@ -103,6 +105,7 @@ pub fn compress_data_dynamic_n<W: Write>(
                 deflate_state.output_buf_pos += written;
             } else {
                 // If we flushed all of the output, reset the output buffer.
+                deflate_state.needs_flush = false;
                 deflate_state.output_buf_pos = 0;
                 deflate_state.output_buf().clear();
             }
@@ -121,7 +124,7 @@ pub fn compress_data_dynamic_n<W: Write>(
         }
 
         if deflate_state.lz77_state.is_last_block() {
-            // The last block has already been written, so we don't ave anything to compress.
+            // The last block has already been written, so we don't have anything to compress.
             break;
         }
 
@@ -254,6 +257,8 @@ pub fn compress_data_dynamic_n<W: Write>(
             // This flush mode means that there should be an empty stored block at the end.
             if flush == Flush::Sync {
                 write_stored_block(&[], &mut deflate_state.encoder_state.writer, false);
+                // Indicate that we need to flush the buffers before doing anything else.
+                deflate_state.needs_flush = true;
             } else if !deflate_state.lz77_state.is_last_block() {
                 // Make sure a block with the last block header has been output.
                 // Not sure this can actually happen, but we make sure to finish properly
@@ -290,7 +295,9 @@ pub fn compress_data_dynamic_n<W: Write>(
         // If we sucessfully wrote all the data, we can clear the output buffer.
         deflate_state.output_buf_pos = 0;
         deflate_state.output_buf().clear();
+        deflate_state.needs_flush = false;
     }
+
     Ok(bytes_written)
 }
 
